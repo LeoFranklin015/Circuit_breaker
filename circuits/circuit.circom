@@ -1,7 +1,27 @@
 pragma circom 2.1.5;
-include "@zk-email/zk-regex-circom/circuits/regex_helpers.circom";
+include "./node_modules/circomlib/circuits/comparators.circom";
+include "./node_modules/circomlib/circuits/gates.circom";
+
+
 
 // regex: .*licet.ac.in
+
+template MultiOR(n) {
+    signal input in[n];
+    signal output out;
+
+    signal sums[n];
+    sums[0] <== in[0];
+    for (var i = 1; i < n; i++) {
+        sums[i] <== sums[i-1] + in[i];
+    }
+
+    component is_zero = IsZero();
+    is_zero.in <== sums[n-1];
+    out <== 1 - is_zero.out;
+}
+
+
 template Test(msg_bytes) {
 	signal input msg[msg_bytes];
 	signal output out;
@@ -129,3 +149,5 @@ template Test(msg_bytes) {
 		reveal0[i] <== in[i+1] * is_reveal0[i];
 	}
 }
+
+component main = Test(30);
