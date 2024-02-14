@@ -1,0 +1,10 @@
+{
+  "name": "email",
+  "version": "1.0.0",
+  "description": "The Circom email circuit.",
+  "scripts": {},
+  "dependencies": {
+    "@zk-email/zk-regex-circom": "^1.2.2",
+    "circomlib": "^2.0.5"
+  }
+}
