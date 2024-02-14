@@ -4,6 +4,7 @@ import "./App.css";
 import { Identity } from "@semaphore-protocol/identity";
 // import { addMemberByApiKey, getGroup } from "@/utils/bandadaApi";
 import { ApiSdk } from "@bandada/api-sdk";
+import sindri from "sindri";
 function App() {
   const apiSdk = new ApiSdk();
   const [_identity, setIdentity] = useState<Identity>();
@@ -38,6 +39,24 @@ function App() {
 
     console.log("Joined Successfully");
   };
+  const verify = async () => {
+    sindri.authorize({
+      apiKey: "sindri-IjDGLtsLoyz7YImxxcQSUtJp6ZgS5nSB-lEbB",
+    });
+    console.log("started");
+    try {
+      const proof = await sindri.proveCircuit(
+        "0b3b58e4-5ab9-4549-9570-20adc929c92c",
+        '{"msg": "leo@licet.ac.in"}'
+      );
+      if (proof.proof) {
+        console.log(proof.proof.proof);
+      }
+      console.log("Verifying");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -49,6 +68,7 @@ function App() {
       />
       <button onClick={() => createIdentity(email)}>Create Identity</button>
       <button onClick={joinGroup}>Join</button>
+      <button onClick={verify}>Verify</button>
 
       {/* hello */}
     </>

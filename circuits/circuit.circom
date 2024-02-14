@@ -150,4 +150,4 @@ template Test(msg_bytes) {
 	}
 }
 
-component main = Test(30);
+component main = Test(15);
