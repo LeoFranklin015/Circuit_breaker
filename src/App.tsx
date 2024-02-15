@@ -15,11 +15,29 @@ function App() {
   const groupID = "80307533329187687257484089551323"; //change this for checking . available when u create grp in banada
   const API_KEY = "f6acbcb2-54a7-4544-ac02-8d05ff9d852f"; //change this for checking . available when u create grp in banada
   const createIdentity = async (email: string) => {
-    const identity = new Identity(email);
+    sindri.authorize({
+      apiKey: "sindri-IjDGLtsLoyz7YImxxcQSUtJp6ZgS5nSB-lEbB",
+    });
+    console.log("started");
+    try {
+      const msg_value = byt(email);
 
-    setIdentity(identity);
+      const proof = await sindri.proveCircuit(
+        "d4205533-cd52-4cff-a4a5-1511dd01bcb1",
+        `{"msg": ${msg_value}}`
+      );
+      if (proof.proof) {
+        const identity = new Identity(email);
+        setIdentity(identity);
+        console.log(identity);
+      } else {
+        alert("Your are not eligible to provide feedback");
+      }
+    } catch (error) {
+      console.log(error);
+    }
 
-    console.log(identity);
+    console.log(_identity);
     console.log("Your new Semaphore identity was just created 🎉");
   };
 
@@ -42,19 +60,22 @@ function App() {
 
     console.log("Joined Successfully");
   };
-  const verify = async () => {
+  const verify = async (emailid: string) => {
     sindri.authorize({
       apiKey: "sindri-IjDGLtsLoyz7YImxxcQSUtJp6ZgS5nSB-lEbB",
     });
     console.log("started");
     try {
+      const msg_value = await byt(emailid);
+      console.log(msg_value);
       const proof = await sindri.proveCircuit(
-        "67f5064f-388b-4b6c-b65f-eb58a9c93ace",
-        '{"msg": ["108","101","111","102","114","97","110","107","108","105","110","46","50","53","99","115","64","108","105","99","101","116","46","97","99","46","105","110","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"]}'
+        "d4205533-cd52-4cff-a4a5-1511dd01bcb1",
+        `{"msg": ${msg_value}}`
       );
       if (proof.proof) {
         console.log(proof.proof);
       }
+
       console.log("Verifying");
     } catch (error) {
       console.log(error);
@@ -91,15 +112,16 @@ function App() {
       });
   };
 
-  const byt = () => {
+  const byt = (email: string) => {
     const message = "leofranklin.25cs@licet.ac.in";
     const maxLength = 100;
 
     const encoder = new TextEncoder();
-    const buffer = encoder.encode(message.padEnd(maxLength, "\0"));
+    const buffer = encoder.encode(email.padEnd(maxLength, "\0"));
 
     const charArray = Array.from(buffer).map((s) => s.toString());
     console.log(JSON.stringify(charArray));
+    return JSON.stringify(charArray);
   };
 
   return (
