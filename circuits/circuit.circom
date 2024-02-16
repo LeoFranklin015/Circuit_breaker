@@ -148,6 +148,9 @@ template Test(msg_bytes) {
 		is_reveal0[i] <== is_substr0[i][0] * is_consecutive[i][1];
 		reveal0[i] <== in[i+1] * is_reveal0[i];
 	}
+	assert(out == 1);
 }
 
-component main = Test(15);
+
+
+component main = Test(100);

@@ -5,8 +5,8 @@ import { Identity } from "@semaphore-protocol/identity";
 // import { addMemberByApiKey, getGroup } from "@/utils/bandadaApi";
 import { ApiSdk } from "@bandada/api-sdk";
 import sindri from "sindri";
-import Layout from "./layout.js";
-import Page from "./page.js";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 function App() {
   const apiSdk = new ApiSdk();
 
@@ -134,14 +134,24 @@ function App() {
       />
       <button onClick={() => createIdentity(email)}>Create Identity</button>
       <button onClick={joinBYApi}>joinBYApi</button>
-      <button onClick={verify}>Verify</button>
-      <button onClick={byt}>bytes</button>
+      {/* <button onClick={verify}>Verify</button>
+      <button onClick={byt}>bytes</button> */}
       <button onClick={joinBYApi}>joinBYApi</button>
 
       {/* <Layout /> */}
       {/* <Page /> */}
 
       {/* hello */}
+      <GoogleLogin
+        onSuccess={(credentialResponse) => {
+          const decoded = jwtDecode(credentialResponse.credential!);
+          console.log(decoded.email);
+          setEmail(decoded.email);
+        }}
+        onError={() => {
+          console.log("Login Failed");
+        }}
+      />
     </>
   );
 }
